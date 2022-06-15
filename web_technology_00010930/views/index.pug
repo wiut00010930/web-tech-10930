@@ -1,0 +1,95 @@
+extends base.pug 
+block content 
+    include includes/navbar.pug
+    div(id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel")
+        div(class="carousel-inner")
+            div(class="carousel-item active")
+                img(src="https://img-c.udemycdn.com/notices/web_banner/slide_1_image_udlite/7869fd17-9599-4a5e-9b03-4748a3dae016.jpg" class="d-block w-100" alt="...")
+            div(class="carousel-item")
+                img(src="https://img-c.udemycdn.com/notices/web_banner/slide_2_image_udlite/e6cc1a30-2dec-4dc5-b0f2-c5b656909d5b.jpg" class="d-block w-100" alt="...")
+        button(class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev")
+            span(class="carousel-control-prev-icon" aria-hidden="true")
+            span(class="visually-hidden") Previous
+
+        button(class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next")
+            span(class="carousel-control-next-icon" aria-hidden="true")
+            span(class="visually-hidden") Next
+
+    div(class='row w-100 m-auto justify-content-between align-items-center bg-white py-4')
+        div(class='col-6')
+            form(action='/search/' method='GET' id='search-form')
+                label(for="exampleFormControlInput1" class="form-label h5") Search for modules
+                input(type="text" class="form-control w-50" name='q' onkeyup='searchQuery()' id="search-input" placeholder="Node.js beginners tutorial..")
+        div(class='col-6 text-end')
+            button(class='btn btn-primary' data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo") Add new module
+    
+    div(class='row justify-content-start align-items-center pt-4 w-100 m-auto')
+        if modules
+            each modulee in modules
+                div(class='col-12 col-md-4 mb-3')
+                    div(class="card m-auto" id='module-container')
+                        div(id='module-img-container')
+                            img(src="https://images8.alphacoders.com/380/thumb-1920-380534.png" id='module-img' class="card-img-top" alt="...")
+                        if modulee.full == true 
+                            div(id='module-status-badge')
+                                span(class="badge bg-warning text-dark") Full
+                        div(class="card-body pb-0")
+                            h5(class="card-title")
+                                a(href="/module/" + modulee.id class='text-decoration-none text-dark')=modulee.title
+                            p(class="card-text")=modulee.description.slice(0, 100)
+                                |..
+                            h6 Start date: #{modulee.startDate.toString().slice(4, 15)}
+                            div(class='row justify-content-between align-items-center border-top py-2')
+                                div(class='col-6')
+                                    h4(class='mb-0 d-inline-block') $#{modulee.price}
+                                    span(class='mx-2') 
+                                        del $#{modulee.price + 10.75}
+                                div(class='col-6 text-end')
+                                    a(href="/module/" + modulee.id class="btn btn-outline-primary") Visit    
+
+    div(class="w-100 bg-white mb-0 m-auto")
+        footer(class="d-flex flex-wrap justify-content-between align-items-center py-3 mt-4 border-top")
+            div(class="col-md-4 d-flex align-items-center")
+                a(href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1")
+                    svg(class="bi" width="30" height="24")
+                        use(xlink:href="#bootstrap")
+                span(class="text-muted") © 2022 UWest Edu, Inc
+
+            ul(class="nav col-md-4 justify-content-end list-unstyled d-flex pe-3")
+                li(class="ms-3")
+                    a(class="text-dark text-decoration-none" href="/") Home
+                
+                li(class="ms-3")
+                    a(class="text-dark text-decoration-none" href="/my/modules/") My modules
+
+    
+    //- ADD A NEW MODULE // BOOTSTRAP MODAL
+    div(class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true")
+        div(class="modal-dialog")
+            div(class="modal-content")
+                div(class="modal-header")
+                    h5(class="modal-title" id="exampleModalLabel") Add a new module
+                    button(type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close")
+                form(action='/add/module/' method='POST')
+                    div(class="modal-body")
+                        div(class="mb-2")
+                            label(for="module-title" class="col-form-label") Module title:
+                            input(type="text" class="form-control" id="module-title" name='title' min="6" max="100" onkeyup='chechNewModuleTitle()')
+                            span(class='d-none text-danger' style='font-size: 14px' id='show-danger') Module with this title already exists !
+                        div(class="mb-2")
+                            label(for="module-text" class="col-form-label") Module description:
+                            textarea(class="form-control" id="module-text" name='description' rows='4' min="6" max="255")
+                        div(class="mb-2 row justify-content-between align-items-center")
+                            div(class='col-6')
+                                label(for="module-price" class="col-form-label") Module price:
+                                input(type="number" class="form-control" placeholder='price' id="module-price" name='price' min="5")
+                            div(class='col-6')
+                                label(for="startDate" class="col-form-label") Start date:
+                                input(id="startDate" class="form-control" min= `${new Date().toISOString().slice(0, 10)}` type="date" name='startdate' required)
+                    div(class="modal-footer")
+                        button(type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal") Close
+                        button(type="submit" class="btn btn-primary" id='add-module-btn') Save
+
+
+
+    

@@ -1,0 +1,108 @@
+extends base.pug 
+block content 
+    include includes/navbar.pug
+    div(id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel")
+        div(class="carousel-inner")
+            div(class="carousel-item active")
+                img(src="https://img-c.udemycdn.com/notices/web_banner/slide_1_image_udlite/7869fd17-9599-4a5e-9b03-4748a3dae016.jpg" class="d-block w-100" alt="...")
+            div(class="carousel-item")
+                img(src="https://img-c.udemycdn.com/notices/web_banner/slide_2_image_udlite/e6cc1a30-2dec-4dc5-b0f2-c5b656909d5b.jpg" class="d-block w-100" alt="...")
+        button(class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev")
+            span(class="carousel-control-prev-icon" aria-hidden="true")
+            span(class="visually-hidden") Previous
+
+        button(class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next")
+            span(class="carousel-control-next-icon" aria-hidden="true")
+            span(class="visually-hidden") Next
+    
+
+    div(class='row justify-content-between align-items-start w-100 m-auto pt-4')
+            div(class='col-12 col-md-5 col-lg-4' style='position: sticky; top: 20px' id='module-card')
+                div(class="card m-auto")
+                    img(src="https://images8.alphacoders.com/380/thumb-1920-380534.png" class="card-img-top" alt="...")
+                    div(class="card-body pb-1")
+                        h2(class="card-title d-inline-block") $#{modulee.price}
+                        span(class='mx-2 fs-5') 
+                            del $#{modulee.price + 10.75}
+                        span(class='mx-2')
+                            |#{(100 - (modulee.price*100)/(modulee.price+10.75)).toString().slice(0,2)}% off
+                        p(class="card-text text-danger") 
+                            i(class="fas fa-clock me-2")
+                            strong 2 hours left at this price!
+                        if modulee.inCart == false
+                            a(class="btn btn-primary w-100 fs-5 py-2 mb-3" id='add-to-cart' onclick='addToCart("'+ modulee.id +'")') Add to cart
+                        else    
+                            a(class="btn btn-outline-danger w-100 fs-5 py-2 mb-3" id='add-to-cart' onclick='addToCart("'+ modulee.id +'")') Remove from cart
+                        a(href="#" class="btn btn-outline-success w-100 fs-5 py-2 mb-2") Buy now
+                        p(class='m-0 w-100 text-center' style='font-size: 14px') 30-Day Money-Back Guarantee
+
+        
+                
+
+            if modulee
+            div(class='col-12 col-md-7 col-lg-8 bg-')    
+                div(class='bg-white p-3 mb-4')
+                    h1(style='word-wrap: break-word;')=modulee.title
+                    p(class='fs-5 text-muted w-75' style='word-wrap: break-word;')=modulee.description
+                    span(class="badge bg-warning text-dark fs-6") Bestseller
+                    span(class='mx-2') 666,489 students
+                    p(class='mt-3') Created by
+                        a(href='#' class='mx-1') John Smith
+
+                    p(class='mt-3') Start date: 
+                        strong #{modulee.startDate.toString().slice(4, 15)}
+                
+                div(class='bg-white border p-3 mb-3')
+                    h4 What will you learn
+                    div(class='row justify-content-between align-items-start w-100 m-auto')
+                        div(class='col-12 col-md-6 my-1')
+                            i(class="fa fa-check" aria-hidden="true")
+                            span(class='mx-2') You will learn how to write Python programming language
+                        
+                        div(class='col-12 col-md-6  my-1')
+                            i(class="fa fa-check" aria-hidden="true")
+                            span(class='mx-2') You will learn how to build test Framework for Front-end and Back-end automation
+
+                        div(class='col-12 col-md-6  my-1')
+                            i(class="fa fa-check" aria-hidden="true")
+                            span(class='mx-2') You will generate html test reports with screen shots for failed tests
+
+                        div(class='col-12 col-md-6  my-1')
+                            i(class="fa fa-check" aria-hidden="true")
+                            span(class='mx-2') You will be confident during software Test Automation job interviews
+
+                        div(class='col-12 mt-3') 
+                            p
+                                button(class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample")
+                                    | See more
+                            div(class="collapse" id="collapseExample")
+                                div(class="card card-body py-2")
+                                    div(class='my-2') 
+                                        i(class="fa fa-check d-inline-block" aria-hidden="true")
+                                        span(class='mx-2') You will learn to build an E-Commerce site locally to practice testing
+                                    div(class='my-2') 
+                                        i(class="fa fa-check" aria-hidden="true")
+                                        span(class='mx-2') You will practice writing real tests on real E-Commerce site
+                div.bg-white.p-3
+                    h4 Requirements
+                    p Required basic understanding of computer and how to install and run software on your computer
+                        |Good to have basic knowledge about HTML and Web Applications
+                        |The desire to learn is all you need
+
+                if modules
+                    div.bg-white.px-3
+                        h4 Students also bought
+                        div(class='row')
+                            each modul in modules
+                                div(class='col-12 border-bottom pb-3 my-1')
+                                    div(class='row justify-content-between align-items-center w-100 m-auto')
+                                        div(class='col-2')
+                                            img(src='https://icon-library.com/images/django-icon/django-icon-21.jpg' style='max-width: 50px')
+                                        div(class='col-8') 
+                                            a(href='/module/' + modul.id class='text-decoration-none text-dark')= modul.title  
+                                            span(class="badge bg-warning text-dark mx-3") Bestseller
+                                        
+                                        div(class='col-2 text-end')
+                                            a(href='/module/' + modul.id class='text-decoration-none text-dark')
+                                                button(class='btn btn-primary') visit
+    

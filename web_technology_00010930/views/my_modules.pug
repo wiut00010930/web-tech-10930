@@ -1,0 +1,104 @@
+extends base.pug 
+block content 
+    include includes/navbar.pug
+    div(id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel")
+        div(class="carousel-inner")
+            div(class="carousel-item active")
+                img(src="https://img-c.udemycdn.com/notices/web_banner/slide_1_image_udlite/7869fd17-9599-4a5e-9b03-4748a3dae016.jpg" class="d-block w-100" alt="...")
+            div(class="carousel-item")
+                img(src="https://img-c.udemycdn.com/notices/web_banner/slide_2_image_udlite/e6cc1a30-2dec-4dc5-b0f2-c5b656909d5b.jpg" class="d-block w-100" alt="...")
+        button(class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev")
+            span(class="carousel-control-prev-icon" aria-hidden="true")
+            span(class="visually-hidden") Previous
+
+        button(class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next")
+            span(class="carousel-control-next-icon" aria-hidden="true")
+            span(class="visually-hidden") Next
+
+    div(class='row justify-content-between align-items-center bg-white w-100 m-auto p-2 px-3')
+        div(class='col-7')
+            h3(class='m-0') Your courses
+
+    div(class='p-2 px-4 w-100 bg-white')
+        input(type="text" class="form-control w-25" id="search-input" placeholder="Search.." onkeyup="search()")
+
+    table(class="table bg-white px-2 table-striped table-hover" id='modules_table')
+        caption List of modules
+        thead(class='table-light')
+            tr(class='text-center')
+                th(scope="col") No:
+                th(scope="col") Title
+                th(scale='col') Price
+                th(scope="col") Status
+                th(scope="col") Start date
+                th(scope='col') Update
+        tbody
+            if modules
+                - let count = 0
+                each modulee in modules
+                    - count = count +1
+                    tr(class='text-center')
+
+                        th(scope="row") #{count}
+                        td.text-start #{modulee.title}
+                        td $#{modulee.price}
+                        if modulee.full == false
+                            td
+                                span(class="badge rounded-pill bg-info text-dark") Available
+                        else 
+                            td 
+                                span(class="badge rounded-pill bg-warning  text-dark") Full
+                        td #{modulee.startDate.toString().slice(4, 15)}
+                        td 
+                            button(class='btn btn-outline-success btn-sm mx-2' data-bs-toggle="modal" data-bs-target="#editModule" data-bs-whatever="@mdo" onclick='fillUpdateModal("'+ modulee.id +'")') Update 
+                            button(class='btn btn-outline-danger btn-sm' onclick='deleteFillModuleForm("'+ modulee.id +'")' data-bs-toggle="modal" data-bs-target="#deleteModal") Delete
+
+
+
+    <!-- Modal -->
+    div(class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true")
+        div(class="modal-dialog")
+            div(class="modal-content")
+                div(class="modal-header")
+                    h5(class="modal-title" id="deleteModalLabel") Deleting this module
+                    button(type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close")
+                div(class="modal-body")
+                    p Are you sure you want to delete this module ?
+                div(class="modal-footer")
+                    form(method='POST' id='delete-form')
+                        button(type="button" class="btn btn-outline-secondary mx-2" data-bs-dismiss="modal") Close
+                        button(type="submit" class="btn btn-danger") Delete
+
+
+
+        //- UPDATE MODULE // BOOTSTRAP MODAL
+    div(class="modal fade" id="editModule" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true")
+        div(class="modal-dialog")
+            div(class="modal-content")
+                div(class="modal-header")
+                    h5(class="modal-title" id="editModalLabel") Update module
+                    button(type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close")
+                form(action='/update/module/' method='POST' id='update-modal')
+                    div(class="modal-body")
+                        div(class="mb-2")
+                            label(for="module-title" class="col-form-label") Module title:
+                            input(type="text" class="form-control" id="module-title" name='title' min="6" max="100")
+                        div(class="mb-2")
+                            label(for="module-text" class="col-form-label") Module description:
+                            textarea(class="form-control" id="module-text" name='description' rows='4' min="6" max="255")
+                        div(class="mb-3 row justify-content-between align-items-center")
+                            div(class='col-6')
+                                label(for="module-price" class="col-form-label") Module price:
+                                input(type="number" class="form-control" placeholder='price' id="module-price" name='price' min="5")
+                            div(class='col-6')
+                                label(for="startDate" class="col-form-label") Start date:
+                                input(id="startDate" class="form-control" min= `${new Date().toISOString().slice(0, 10)}` type="date" name='startdate' required)
+                        div(class="form-check form-switch")
+                            input(class="form-check-input" type="checkbox" role="switch" name='status' id="module-status")
+                            label(class="form-check-label" for="module-status"  data-bs-toggle="tooltip" data-bs-placement="top" title="Chech this if your module has reached its maximum students capacity") Is your module full ?
+
+                    div(class="modal-footer")
+                        button(type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal") Close
+                        button(type="submit" class="btn btn-primary") Save    
+                    
+    script(src='/static/main.js')
