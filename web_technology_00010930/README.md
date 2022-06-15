@@ -29,8 +29,8 @@ $ node app
 ```
 
 ## Link to github repo
-
+https://github.com/wiut00010930/web-technology-00010930.git
 
 ## Link to the Website URL
-(http://wiut10930.glitch.me/my/modules/)
-(https://wiut10930.herokuapp.com/)
+* http://wiut10930.glitch.me/my/modules/
+* https://wiut10930.herokuapp.com/
